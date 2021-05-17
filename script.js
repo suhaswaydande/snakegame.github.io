@@ -1,0 +1,141 @@
+
+const canvas = document.getElementById('canvas');
+
+const ctx = canvas.getContext("2d");
+/** @type {CanvasRenderingContext2D} */
+
+
+ctx.canvas.width = window.innerWidth;
+ctx.canvas.height = window.innerHeight;
+
+
+
+class TheSnake{
+  constructor(){
+    
+    this.size = 20;
+    this.len = 5;
+    this.body = [];
+    this.speed = 1;
+    this.Direction = "LEFT";
+    this.DirectionAxis = {UP:"UP", RIGHT:"RIGHT", DOWN:"DOWN", LEFT:"LEFT"};
+    this.food = {
+      pos:{x:0, y:0},
+      showFood:false,
+    };
+    this.Animate();
+    window.requestAnimationFrame(this.DrawSnake);
+
+    window.addEventListener("keypress",(e)=>{
+      
+      if(e.key == "W" || e.key == "w"){
+        if(this.Direction == "DOWN"){
+          return;
+        }
+        this.Direction = this.DirectionAxis.UP;
+      }else if(e.key == "D" || e.key == "d"){
+        if(this.Direction == "LEFT"){
+          return;
+        }
+        this.Direction = this.DirectionAxis.RIGHT;
+      }else if(e.key == "S" || e.key == "s"){
+        if(this.Direction == "UP"){
+          return;
+        }
+        this.Direction = this.DirectionAxis.DOWN;
+      }else if(e.key == "A" || e.key == "a"){
+        if(this.Direction == "RIGHT"){
+          return;
+        }
+        this.Direction = this.DirectionAxis.LEFT;
+      };
+    });
+
+  };
+
+  InitSnake = ()=>{
+    let prop = {x:((ctx.canvas.width / this.size) / 2) * this.size, y:((ctx.canvas.height / this.size) / 2) * this.size};
+    for(let i = 0; i < this.len; i++){
+      this.body.push({x:prop.x, y:prop.y});
+      prop.x += this.size;
+    };
+  };
+
+  Animate =()=>{
+    this.InitSnake();
+    console.log(this.body);
+    let timer = setInterval(()=>{
+      this.DrawFood();
+      this.Update();
+    }, 100);
+  };
+
+  Update = ()=>{
+    let Axis = {x:this.body[0].x, y:this.body[0].y};
+    switch(this.Direction){
+      case "UP":
+        if(Axis.y <= 0){
+          Axis.y = ctx.canvas.height;
+          break;
+        };
+        Axis.y -= this.size;
+        break;
+      case "RIGHT":
+        if(Axis.x >= ctx.canvas.width){
+          Axis.x = 0;
+          break;
+        };
+        Axis.x += this.size;
+        break;
+      case "DOWN":
+        if(Axis.y >= ctx.canvas.height){
+          Axis.y = 0;
+          break;
+        };
+        Axis.y += this.size;
+        break;
+      case "LEFT":
+        if(Axis.x <= 0){
+          Axis.x = ctx.canvas.width;
+          break;
+        };
+        Axis.x -= this.size;
+        break;
+      default:
+        Axis.x -= this.size;
+        break;
+    };
+    this.body.unshift({x:Axis.x, y:Axis.y});
+    this.body.pop();
+  };
+
+  DrawFood = ()=>{
+    if(this.food.showFood == false){
+      this.food.pos.x = Math.floor((Math.random() * this.size) * (ctx.canvas.width / this.size));
+      this.food.pos.y = Math.floor((Math.random() *this.size) * (ctx.canvas.height / this.size)) + 7;
+      this.food.showFood = true;
+    };
+  };
+
+  DrawSnake = ()=>{
+    ctx.fillStyle = "rgba(0, 204, 102, 0.4)";
+    ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+    ctx.fillStyle = "black";
+    for(let j =0; j < this.len; j++){
+      ctx.fillRect(this.body[j].x, this.body[j].y, this.size, this.size);
+    };
+    if(this.food.showFood){
+      ctx.fillStyle = "red";
+      ctx.fillRect(this.food.pos.x, this.food.pos.y, this.size, this.size);
+    };
+
+    window.requestAnimationFrame(this.DrawSnake);
+  }
+
+
+
+}
+
+let mm = new TheSnake;
+
+
