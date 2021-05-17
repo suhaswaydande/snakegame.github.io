@@ -54,7 +54,7 @@ class TheSnake{
   };
 
   InitSnake = ()=>{
-    let prop = {x:((ctx.canvas.width / this.size) / 2) * this.size, y:((ctx.canvas.height / this.size) / 2) * this.size};
+    let prop = {x:(((ctx.canvas.width / this.size) / 2) * this.size) - this.size / 2, y:(((ctx.canvas.height / this.size) / 2) * this.size) - this.size / 2};
     for(let i = 0; i < this.len; i++){
       this.body.push({x:prop.x, y:prop.y});
       prop.x += this.size;
@@ -111,8 +111,8 @@ class TheSnake{
 
   DrawFood = ()=>{
     if(this.food.showFood == false){
-      this.food.pos.x = Math.floor((Math.random() * this.size) * (ctx.canvas.width / this.size));
-      this.food.pos.y = Math.floor((Math.random() *this.size) * (ctx.canvas.height / this.size)) + 7;
+      this.food.pos.x = Math.floor(Math.random() * (ctx.canvas.width / this.size)) * this.size;
+      this.food.pos.y = Math.floor(Math.random() * (ctx.canvas.height / this.size)) * this.size;
       this.food.showFood = true;
     };
   };
