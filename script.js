@@ -5,24 +5,31 @@ const ctx = canvas.getContext("2d");
 /** @type {CanvasRenderingContext2D} */
 
 
-ctx.canvas.width = window.innerWidth;
-ctx.canvas.height = window.innerHeight;
-
+ctx.canvas.width = 1000;
+ctx.canvas.height = 600;
+canvas.width = 1000;
+canvas.height = 600;
+if(window.innerWidth < 800){
+  ctx.canvas.width = 400;
+  ctx.canvas.width = 600;
+}
 
 
 class TheSnake{
   constructor(){
-    
+    this.score = 0;
     this.size = 20;
     this.len = 5;
     this.body = [];
-    this.speed = 1;
+    this.speed = 50;
     this.Direction = "LEFT";
     this.DirectionAxis = {UP:"UP", RIGHT:"RIGHT", DOWN:"DOWN", LEFT:"LEFT"};
     this.food = {
       pos:{x:0, y:0},
       showFood:false,
     };
+    this.GameOn = true;
+
     this.Animate();
     window.requestAnimationFrame(this.DrawSnake);
 
@@ -51,10 +58,14 @@ class TheSnake{
       };
     });
 
+    this.ShowScore = document.getElementById("score");
+    
+
+
   };
 
   InitSnake = ()=>{
-    let prop = {x:(((ctx.canvas.width / this.size) / 2) * this.size) - this.size / 2, y:(((ctx.canvas.height / this.size) / 2) * this.size) - this.size / 2};
+    let prop = {x:(((ctx.canvas.width / this.size) / 2) * this.size), y:(((ctx.canvas.height / this.size) / 2) * this.size)};
     for(let i = 0; i < this.len; i++){
       this.body.push({x:prop.x, y:prop.y});
       prop.x += this.size;
@@ -65,9 +76,19 @@ class TheSnake{
     this.InitSnake();
     console.log(this.body);
     let timer = setInterval(()=>{
+      this.CheckBodyTouch();
+      if(!this.GameOn){
+        clearInterval(timer);
+        
+        if(confirm("Do you want to restart the game !")){
+          window.location.reload();
+        };
+        return;
+      }
       this.DrawFood();
       this.Update();
-    }, 100);
+      this.EatFood();
+    }, this.speed);
   };
 
   Update = ()=>{
@@ -75,20 +96,20 @@ class TheSnake{
     switch(this.Direction){
       case "UP":
         if(Axis.y <= 0){
-          Axis.y = ctx.canvas.height;
+          Axis.y = ctx.canvas.height - this.size;
           break;
         };
         Axis.y -= this.size;
         break;
       case "RIGHT":
-        if(Axis.x >= ctx.canvas.width){
+        if(Axis.x >= ctx.canvas.width - this.size){
           Axis.x = 0;
           break;
         };
         Axis.x += this.size;
         break;
       case "DOWN":
-        if(Axis.y >= ctx.canvas.height){
+        if(Axis.y >= ctx.canvas.height - this.size){
           Axis.y = 0;
           break;
         };
@@ -96,7 +117,7 @@ class TheSnake{
         break;
       case "LEFT":
         if(Axis.x <= 0){
-          Axis.x = ctx.canvas.width;
+          Axis.x = ctx.canvas.width - this.size;
           break;
         };
         Axis.x -= this.size;
@@ -131,6 +152,24 @@ class TheSnake{
 
     window.requestAnimationFrame(this.DrawSnake);
   }
+
+  EatFood = () =>{
+    if((this.body[0].x >= this.food.pos.x && this.body[0].x <= this.food.pos.x) && (this.body[0].y >= this.food.pos.y && this.body[0].y <= this.food.pos.y)){
+      this.len += 1;
+      this.score +=1;
+      this.ShowScore.innerText = "Score : " + this.score;
+      this.food.showFood = false;
+      this.InitSnake();
+    };
+  };
+
+  CheckBodyTouch = ()=>{
+    for(let m = 1; m < this.len; m++){
+      if((this.body[0].x >= this.body[m].x && this.body[0].x <= this.body[m].x) && (this.body[0].y >= this.body[m].y && this.body[0].y <= this.body[m].y)){
+        this.GameOn = false;
+      };
+    };
+  };
 
 
 
