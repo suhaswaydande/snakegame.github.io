@@ -1,3 +1,3 @@
 # snakegame.github.io
 
-snake-game
+https://suhaswaydande.github.io/snakegame.github.io/
