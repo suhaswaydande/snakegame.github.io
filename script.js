@@ -55,6 +55,8 @@ class TheSnake{
           return;
         }
         this.Direction = this.DirectionAxis.LEFT;
+      }else{
+        return
       };
     });
 
