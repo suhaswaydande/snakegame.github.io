@@ -76,7 +76,6 @@ class TheSnake{
 
   Animate =()=>{
     this.InitSnake();
-    console.log(this.body);
     let timer = setInterval(()=>{
       this.CheckBodyTouch();
       if(!this.GameOn){
