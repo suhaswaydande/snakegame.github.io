@@ -34,7 +34,7 @@ class TheSnake{
     window.requestAnimationFrame(this.DrawSnake);
 
     window.addEventListener("keypress",(e)=>{
-      
+      await sleep(this.speed);
       if(e.key == "W" || e.key == "w"){
         if(this.Direction == "DOWN"){
           return;
