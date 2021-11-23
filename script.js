@@ -21,7 +21,7 @@ class TheSnake{
     this.size = 20;
     this.len = 5;
     this.body = [];
-    this.speed = 50;
+    this.speed = 10;
     this.Direction = "LEFT";
     this.DirectionAxis = {UP:"UP", RIGHT:"RIGHT", DOWN:"DOWN", LEFT:"LEFT"};
     this.food = {
@@ -159,6 +159,7 @@ class TheSnake{
     if((this.body[0].x >= this.food.pos.x && this.body[0].x <= this.food.pos.x) && (this.body[0].y >= this.food.pos.y && this.body[0].y <= this.food.pos.y)){
       this.len += 1;
       this.score +=1;
+      this.speed += 0.3;
       this.ShowScore.innerText = "Score : " + this.score;
       this.food.showFood = false;
       this.InitSnake();
